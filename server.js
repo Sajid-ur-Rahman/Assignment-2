@@ -3,7 +3,7 @@
  *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source
  *  (including 3rd party web sites) or distributed to other students.
  *
- *  Name: _________MD SAJIDUR RAHMAN_____________ Student ID: _____115695207_________ Date: _____2/18/2023___________
+ *  Name: _________MD SAJIDUR RAHMAN_____________ Student ID: _____115695207_________ Date: _____3/6/2023___________
  *
  *  Online (Cyclic) Link:
  *  https://outstanding-pear-giraffe.cyclic.app
@@ -235,8 +235,16 @@ app.get("/posts", function (req, res) {
   if (category) {
     blog
       .getPostsByCategory(category)
-      .then((data) => res.send(data))
-      .catch((err) => res.send(err));
+      .then((data) =>
+        res.render("sameCategoryPosts", {
+          posts: data,
+        })
+      )
+      .catch((err) =>
+        res.render("sameCategoryPosts", {
+          posts: "No Result Found!",
+        })
+      );
   } else if (minDate) {
     blog
       .getPostsByMinDate(minDate)
