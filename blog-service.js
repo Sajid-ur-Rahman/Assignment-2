@@ -36,6 +36,17 @@ module.exports.getPublishedPosts = function () {
   });
 };
 
+module.exports.getPublishedPostsByCategory = function (category) {
+  return new Promise((resolve, reject) => {
+    const truePublish = posts.filter(
+      (pub) => pub.published == true && pub.category == category
+    );
+    // console.log(truePublish.length););
+    if (truePublish.length > 0) resolve(truePublish);
+    else reject("No such result found!");
+  });
+};
+
 module.exports.getCategories = function () {
   return new Promise((resolve, reject) => {
     if (categories.length == 0) reject("Nothing is found");
