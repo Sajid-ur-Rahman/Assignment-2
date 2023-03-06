@@ -89,6 +89,7 @@ module.exports.adPost = function (postData) {
     if (postData) {
       postData.published = postData.published == undefined ? false : true;
       postData.id = posts.length + 1;
+      postData.postDate = new Date().toISOString().slice(0, 10);
       posts.push(postData);
       // posts.push({
       //   id: posts.length,

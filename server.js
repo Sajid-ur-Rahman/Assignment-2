@@ -83,7 +83,7 @@ app.use(function (req, res, next) {
 });
 
 app.get("/", function (req, res) {
-  res.redirect("/about");
+  res.redirect("/blog");
 });
 
 app.use(express.static("public"));
@@ -379,6 +379,8 @@ app.post("/posts/add", upload.single("featureImage"), (req, res) => {
     });
 });
 
+app.use("/data", express.static(path.join(__dirname, "data")));
 app.all("*", function (req, res) {
-  res.status(404).sendFile(path.join(__dirname, "/data/Error.jpg"));
+  // res.status(404).sendFile(path.join(__dirname, "/data/Error.jpg"));
+  res.render("404");
 });
