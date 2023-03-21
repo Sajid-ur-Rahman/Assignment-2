@@ -1,7 +1,3 @@
-// var fs = require("fs");
-// var posts = [];
-// var categories = [];
-
 const Sequelize = require("sequelize");
 var sequelize = new Sequelize(
   "ncutvmhn",
