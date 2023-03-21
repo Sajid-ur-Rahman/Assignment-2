@@ -16,7 +16,11 @@
           <tr>
             <td>{{id}}</td>
             <td>{{title}}</td>
-            <td>{{postDate}}</td>
+            {{#if postDate}}
+              {{#formatDate postDate}}{{/formatDate}}
+            {{else}}
+              N/A
+            {{/if}}
             <td><a href="/posts?category={{category}}">{{category}}</a></td>
             <td>{{published}}</td>
           </tr>

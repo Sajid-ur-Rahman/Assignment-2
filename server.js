@@ -1,9 +1,9 @@
 /*********************************************************************************
- *  WEB322 – Assignment 02
+ *  WEB322 – Assignment 05
  *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source
  *  (including 3rd party web sites) or distributed to other students.
  *
- *  Name: _________MD SAJIDUR RAHMAN_____________ Student ID: _____115695207_________ Date: _____3/6/2023___________
+ *  Name: _________MD SAJIDUR RAHMAN_____________ Student ID: _____115695207_________ Date: _____3/21/2023___________
  *
  *  Online (Cyclic) Link:
  *  https://outstanding-pear-giraffe.cyclic.app
@@ -43,6 +43,12 @@ app.engine(
       },
       safeHTML: function (context) {
         return stripJs(context);
+      },
+      formatDate: function (dateObj) {
+        let year = dateObj.getFullYear();
+        let month = (dateObj.getMonth() + 1).toString();
+        let day = dateObj.getDate().toString();
+        return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
       },
     },
   })
@@ -254,9 +260,11 @@ app.get("/posts", function (req, res) {
     blog
       .getAllPosts()
       .then((data) => {
-        res.render("posts", {
-          posts: data,
-        });
+        if (data.length > 0)
+          res.render("posts", {
+            posts: data,
+          });
+        else res.render("posts", { message: "no results" });
       })
       .catch((err) => {
         res.render("posts", {
@@ -300,9 +308,11 @@ app.get("/categories", function (req, res) {
   blog
     .getCategories()
     .then((data) => {
-      res.render("categories", {
-        categories: data,
-      });
+      if (data.length > 0)
+        res.render("categories", {
+          categories: data,
+        });
+      else res.render("categories", { message: "no results" });
     })
     .catch((err) => {
       res.render("categories", {
@@ -324,7 +334,30 @@ app.use(function (req, res, next) {
 });
 
 app.get("/posts/add", (req, res) => {
-  res.render("addPost");
+  blog
+    .getCategories()
+    .then((data) => {
+      res.render("addPost", { categories: data });
+    })
+    .catch(() => {
+      res.render("addPost", { categories: [] });
+    });
+});
+
+app.use(express.static("public"));
+app.use(function (req, res, next) {
+  let route = req.path.substring(1);
+  app.locals.activeRoute =
+    "/" +
+    (isNaN(route.split("/")[1])
+      ? route.replace(/\/(?!.*)/, "")
+      : route.replace(/\/(.*)/, ""));
+  app.locals.viewingCategory = req.query.category;
+  next();
+});
+app.use(express.urlencoded({ extended: true }));
+app.get("/categories/add", (req, res) => {
+  res.render("addCategory");
 });
 
 blog
@@ -384,6 +417,77 @@ app.post("/posts/add", upload.single("featureImage"), (req, res) => {
     })
     .catch((err) => {
       console.log(err);
+    });
+});
+
+app.use(express.static("public"));
+app.use(function (req, res, next) {
+  let route = req.path.substring(1);
+  app.locals.activeRoute =
+    "/" +
+    (isNaN(route.split("/")[1])
+      ? route.replace(/\/(?!.*)/, "")
+      : route.replace(/\/(.*)/, ""));
+  app.locals.viewingCategory = req.query.category;
+  next();
+});
+app.post("/categories/add", (req, res) => {
+  blog
+    .addCategory(req.body)
+    .then((data) => {
+      //console.log(data);
+      res.redirect("/categories");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+app.use(express.static("public"));
+app.use(function (req, res, next) {
+  let route = req.path.substring(1);
+  app.locals.activeRoute =
+    "/" +
+    (isNaN(route.split("/")[1])
+      ? route.replace(/\/(?!.*)/, "")
+      : route.replace(/\/(.*)/, ""));
+  app.locals.viewingCategory = req.query.category;
+  next();
+});
+app.get("/categories/delete/:id", (req, res) => {
+  const ctgId = req.params.id;
+  blog
+    .deleteCategoryById(ctgId)
+    .then(() => {
+      //console.log(data);
+      res.redirect("/categories");
+    })
+    .catch(() => {
+      res.status(500).send("Unable to Remove Category / Category not found)");
+    });
+});
+
+app.use(express.static("public"));
+app.use(function (req, res, next) {
+  let route = req.path.substring(1);
+  app.locals.activeRoute =
+    "/" +
+    (isNaN(route.split("/")[1])
+      ? route.replace(/\/(?!.*)/, "")
+      : route.replace(/\/(.*)/, ""));
+  app.locals.viewingCategory = req.query.category;
+  next();
+});
+app.get("/posts/delete/:id", (req, res) => {
+  const postId = req.params.id;
+  blog
+    .deletePostById(postId)
+    .then(() => {
+      //console.log(data);
+      res.redirect("/posts");
+    })
+    .catch(() => {
+      res.status(500).send("Unable to Remove Post / Post not found)");
     });
 });
 

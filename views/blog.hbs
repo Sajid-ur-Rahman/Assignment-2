@@ -15,7 +15,14 @@
       {{data.post.category}}
       <br />
       <strong>Last Updated:</strong>
-      {{data.post.postDate}}
+      {{#if postDate}}
+        {{#formatDate post.postDate}}
+           {{data.post}}
+        {{/formatDate}}
+      {{else}}
+        N/A
+      {{/if}}
+      
 
     </article>
     {{/if}}
