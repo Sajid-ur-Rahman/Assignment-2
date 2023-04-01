@@ -36,16 +36,14 @@
           <a href="/blog/{{this.id}}?category={{../viewingCategory}}">{{this.title}}</a>
         {{/each}}
       </ul>
-      {{/if}}
 
-      {{#else}}
+      {{else}}
        <div class="col-md-12 text-center">
             <h2>{{data.message}}</h2>
             <p>Please try another Post / Category</p>
        </div>
 
-      {{/else}}
-
+      {{/if}}
     
 
     {{#if data.categories}} <ul class="list-group">
